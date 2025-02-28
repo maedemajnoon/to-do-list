@@ -8,14 +8,6 @@ addButton.addEventListener("click", () => {
   //console.log(input);
   if (input === "") return;
   let li = document.createElement("li");
-  //   let buttons = `
-  //         <span>${input}</span>
-  //         <div>
-  //             <button class="done">Done</button>
-  //             <button class="edit">Edit</button>
-  //             <button class="delete">Delete</button>
-  //         </div>`;
-  //   li.insertAdjacentElement("afterbegin", buttons);
   li.innerHTML = `
           <span>${input}</span>
           <div>
