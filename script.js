@@ -3,9 +3,7 @@ let inputField = document.querySelector("#task-input");
 let taskList = document.querySelector("#task-list");
 
 addButton.addEventListener("click", () => {
-  //console.log("add task");
   let input = inputField.value;
-  //console.log(input);
   if (input === "") return;
   let li = document.createElement("li");
   li.innerHTML = `
@@ -15,19 +13,21 @@ addButton.addEventListener("click", () => {
               <button class="edit">Edit</button>
               <button class="delete">Delete</button>
           </div>`;
-  //saveTasks();
+
   let doneBTN = li.querySelector(".done");
   let deleteBTN = li.querySelector(".delete");
   let editBTN = li.querySelector(".edit");
 
   doneBTN.addEventListener("click", () => {
     li.classList.toggle("done");
-    //saveTasks();
+    saveTasks();
   });
 
   deleteBTN.addEventListener("click", () => {
-    taskList.removeChild(li);
-    //saveTasks();
+    if (window.confirm("Are you sure you wanna delete this task?")) {
+      taskList.removeChild(li);
+      saveTasks();
+    } else return;
   });
 
   editBTN.addEventListener("click", () => {
@@ -35,7 +35,7 @@ addButton.addEventListener("click", () => {
     if (newInputField) {
       li.querySelector("span").textContent = newInputField;
     }
-    //saveTasks();
+    saveTasks();
   });
 
   taskList.appendChild(li);
@@ -46,7 +46,43 @@ function saveTasks() {
   localStorage.setItem("task", taskList.innerHTML);
 }
 function showTasks() {
-  taskList.innerHTML = localStorage.getItem("task");
+  let tasks = localStorage.getItem("task");
+  if (tasks) {
+    taskList.innerHTML = tasks;
+    let doneBTNs = document.querySelectorAll(".done");
+    let deleteBTNs = document.querySelectorAll(".delete");
+    let editBTNs = document.querySelectorAll(".edit");
+
+    doneBTNs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        let li = btn.closest("li"); //The closest ancestor Element or itself, which matches the selectors. If there are no such element, null.
+        li.classList.toggle("done");
+      });
+    });
+
+    deleteBTNs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        let li = btn.closest("li");
+        if (window.confirm("Are you sure you wanna delete this task?")) {
+          taskList.removeChild(li);
+          saveTasks();
+        } else return;
+      });
+    });
+
+    editBTNs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        let li = btn.closest("li");
+        let newInputField = prompt(
+          "Edit:",
+          li.querySelector("span").textContent
+        );
+        if (newInputField) {
+          li.querySelector("span").textContent = newInputField;
+        }
+      });
+    });
+  }
 }
 showTasks();
 //localStorage.clear();
